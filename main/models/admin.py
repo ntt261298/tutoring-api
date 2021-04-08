@@ -7,13 +7,13 @@ class AdminModel(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(64), nullable=False, unique=True)
-    google_id = db.Column(db.String(50))
+    google_id = db.Column(db.String(64))
     access_token_nonce = db.Column(db.String(8), nullable=False, default=generate_access_token_nonce)
-    google_first_name = db.Column(db.String(64), nullable=True)
-    google_last_name = db.Column(db.String(64), nullable=True)
+    google_name = db.Column(db.Unicode(128), nullable=True)
 
     def __init__(self, *args, **kwargs):
         super(AdminModel, self).__init__(*args, **kwargs)
 
     def save_to_db(self):
         db.session.add(self)
+        db.session.commit()

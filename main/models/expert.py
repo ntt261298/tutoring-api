@@ -2,8 +2,8 @@ from main import db
 from main.libs.jwttoken import generate_access_token_nonce
 
 
-class ExplainerModel(db.Model):
-    __tablename__ = 'explainer'
+class ExpertModel(db.Model):
+    __tablename__ = 'expert'
 
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(64), nullable=False, unique=True)
@@ -18,7 +18,8 @@ class ExplainerModel(db.Model):
     is_fraud = db.Column(db.Boolean(create_constraint=False), nullable=False, default=False)
 
     def __init__(self, *args, **kwargs):
-        super(ExplainerModel, self).__init__(*args, **kwargs)
+        super(ExpertModel, self).__init__(*args, **kwargs)
 
     def save_to_db(self):
         db.session.add(self)
+        db.session.commit()

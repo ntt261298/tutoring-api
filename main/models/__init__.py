@@ -1,11 +1,16 @@
 __all__ = [
     'admin',
-    'asker',
-    'asker_rating',
-    'explainer',
-    'explainer_rank',
-    'explainer_rating',
-    'explainer_subject',
-    'problem',
+    'expert',
+    'expert_earning',
+    'expert_rank',
+    'expert_topic',
+    'feedback',
+    'question',
+    'subscription_package',
+    'topic',
+    'transaction',
+    'user',
+    'user_rating',
+    'user_subscription_package',
 ]
 
