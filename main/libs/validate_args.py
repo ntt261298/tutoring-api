@@ -19,6 +19,5 @@ def validate_args(schema):
             kwargs['args'] = result
             return f(*args, **kwargs)
 
-        return decorated_function()
-
+        return decorated_function
     return validate_args_with_decorator

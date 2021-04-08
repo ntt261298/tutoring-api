@@ -10,7 +10,6 @@ def encode(account):
     iat = datetime.datetime.utcnow()
     return jwt.encode({
         'sub': account.id,
-        'aud': account.account_type,
         'iat': iat,
         'exp': iat + datetime.timedelta(days=365),
         'nonce': account.access_token_nonce,

@@ -11,4 +11,7 @@ db = SQLAlchemy(app)
 
 CORS(app)
 
+
 from main.models import *
+import main.controllers
+import main.errors

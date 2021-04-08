@@ -2,14 +2,14 @@ from flask import request
 
 from main.enums import AccountType
 from main.libs import jwttoken
-from main.models.asker import AskerModel
+from main.models.user import UserModel
 from main.models.admin import AdminModel
-from main.models.explainer import ExplainerModel
+from main.models.expert import ExpertModel
 
 
 AudienceModels = {
-    AccountType.ASKER: AskerModel,
-    AccountType.EXPLAINER: ExplainerModel,
+    AccountType.USER: UserModel,
+    AccountType.EXPERT: ExpertModel,
     AccountType.ADMIN: AdminModel,
 }
 
