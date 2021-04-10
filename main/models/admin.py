@@ -4,6 +4,7 @@ from main.libs.jwttoken import generate_access_token_nonce
 
 class AdminModel(db.Model):
     __tablename__ = 'admin'
+    account_type = 'admin'
 
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(64), nullable=False, unique=True)
