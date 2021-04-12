@@ -1,2 +1,2 @@
 from .admin import auth
-from .user import auth, info
+from .user import auth, info, feedback
