@@ -34,6 +34,7 @@ class ErrorCode:
     PERMISSION_DENIED = 40003
     USER_EMAIL_ALREADY_EXISTED = 40032
     USER_ERROR = 40033
+    BRAINTREE_ERROR = 40034
     UNAUTHORIZED = 40100
 
 
@@ -41,6 +42,11 @@ class BadRequest(Error):
     status_code = StatusCode.BAD_REQUEST
     error_code = ErrorCode.BAD_REQUEST
     error_message = "Bad request"
+
+    def __init__(self, error_data=None, code=ErrorCode.BAD_REQUEST, message='Bad Request'):
+        super(self.__class__, self).__init__(error_data)
+        self.error_code = code
+        self.error_message = message
 
 
 class PermissionDenied(Error):
@@ -71,6 +77,12 @@ class Unauthorized(Error):
     status_code = StatusCode.UNAUTHORIZED
     error_code = ErrorCode.UNAUTHORIZED
     error_message = 'Unauthorized'
+
+
+class BraintreeError(Error):
+    status_code = StatusCode.BAD_REQUEST
+    error_code = ErrorCode.BRAINTREE_ERROR
+    error_message = 'We were unable to complete this transaction, please contact your bank for more details.'
 
 
 class UserError(Error):

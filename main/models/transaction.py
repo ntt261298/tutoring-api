@@ -6,7 +6,8 @@ class TransactionModel(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    package_id = db.Column(db.Integer, db.ForeignKey('subscription_package.id'))
+    package_name = db.String(128)
+    package_type = db.String(128)
     amount = db.Column(db.Float)
 
     def __init__(self, *args, **kwargs):
