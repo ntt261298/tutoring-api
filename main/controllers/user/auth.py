@@ -2,7 +2,7 @@ from marshmallow import fields, validate
 from google_auth_oauthlib.flow import Flow
 
 from config import config
-from main import app
+from main import app, db
 from main.models.user import UserModel
 from main.schemas.base import BaseSchema
 from main.schemas.user import AccessTokenSchema
@@ -70,6 +70,15 @@ def sign_up_user_email(args):
         password = pw.generate_temporary_password()
     password_salt, password_hash = pw.generate_password(password)
 
+    # Give 5 free questions for new user
+    free_credit_balance = 5
+
+    # Check fraud by browser fingerprint
+    duplicated_bf_user = UserModel.query.filter_by(browser_fingerprint=browser_fingerprint).first()
+    if duplicated_bf_user:
+        # Reset free questions
+        free_credit_balance = 0
+
     # Create a new user
     user = UserModel(
         email=email,
@@ -77,6 +86,7 @@ def sign_up_user_email(args):
         password_salt=password_salt,
         nickname=nickname,
         browser_fingerprint=browser_fingerprint,
+        free_credit_balance=free_credit_balance
     )
     try:
         user.save_to_db()
