@@ -1,5 +1,5 @@
 from google_auth_oauthlib.flow import Flow
-from marshmallow import Schema, fields
+from marshmallow import fields
 from flask import jsonify
 
 from config import config
@@ -7,54 +7,54 @@ from main import app
 from main import db
 from main.errors import PermissionDenied
 from main.models.admin import AdminModel
+from main.schemas.base import BaseSchema
 from main.libs import jwttoken
 from main.libs.validate_args import validate_args
 
 
-class GoogleAuthSchema(Schema):
-    id_token = fields.String(required=True)
+class GoogleAuthSchema(BaseSchema):
+    authorization_code = fields.String(required=True)
 
 
-@app.route('/log-in/admin/google', method=['POST'])
+@app.route('/log-in/admin/google', methods=['POST'])
 @validate_args(GoogleAuthSchema())
 def log_in_admin_google(args):
     authorization_code = args['authorization_code']
 
     flow = Flow.from_client_secrets_file(
         'credentials/google_client_secret.json',
-        scopes=['profile', 'email'],
-        redirect_uri=config.GOOGLE_REDIRECT_URI
+        scopes=[
+            "openid",
+            "https://www.googleapis.com/auth/userinfo.profile",
+            "https://www.googleapis.com/auth/userinfo.email"],
+        redirect_uri=config.GOOGLE_REDIRECT_URI,
     )
 
     flow.fetch_token(code=authorization_code)
 
     session = flow.authorized_session()
-    user_info = session.get('https://www.googleapis.com/userinfo/v2/me').json()
-    google_id = user_info['sub']
-    hosted_domain = user_info['hd']
-    name = user_info['name'] or {}
+    admin_info = session.get('https://www.googleapis.com/userinfo/v2/me').json()
+    print('admin_info', admin_info)
+    google_id = admin_info['id']
+    google_name = admin_info['name']
+    email = admin_info['email']
 
-    if hosted_domain not in config.WHITELIST_DOMAINS:
+    if email not in config.WHITELIST_EMAILS:
         raise PermissionDenied()
 
-    user = AdminModel.query.filter_by(google_id=google_id).first()
+    admin = AdminModel.query.filter_by(google_id=google_id).first()
 
-    if not user:
-        user = AdminModel(
+    if not admin:
+        admin = AdminModel(
             google_id=google_id,
-            email=user_info['email'],
-            google_first_name=name.get('givenName') or '',
-            google_last_name=name.get('familyName') or ''
+            google_name=google_name,
+            email=email,
         )
-        db.session.add(user)
+        db.session.add(admin)
     db.session.commit()
 
-    user_name = user.google_first_name + ' ' + user.google_last_name
-
     return jsonify({
-        'access_token': jwttoken.encode(user),
-        'account_id': user.id,
-        'account_name': user_name,
-        'account_type': 'admin',
-        'auth_type': 'google'
+        'access_token': jwttoken.encode(admin),
+        'account_id': admin.id,
+        'account_name': admin.google_name,
     })
