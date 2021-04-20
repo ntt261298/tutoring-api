@@ -13,3 +13,8 @@ class SubscriptionType:
 class SubscriptionStatus:
     ACTIVE = 'active'
     TERMINATED = 'terminated'
+
+
+class Topic:
+    MATH = 1
+    ENGLISH = 2

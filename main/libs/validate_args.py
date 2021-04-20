@@ -11,6 +11,8 @@ def validate_args(schema):
         @wraps(f)
         def decorated_function(*args, **kwargs):
             request_args = request.get_json() or {}
+            if request.method == 'GET':
+                request_args = request.args.to_dict()
             try:
                 result = schema.load(request_args)
             except ValidationError as err:

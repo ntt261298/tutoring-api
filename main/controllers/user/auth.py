@@ -2,7 +2,7 @@ from marshmallow import fields, validate
 from google_auth_oauthlib.flow import Flow
 
 from config import config
-from main import app, db
+from main import app
 from main.models.user import UserModel
 from main.schemas.base import BaseSchema
 from main.schemas.user import AccessTokenSchema

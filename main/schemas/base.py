@@ -3,5 +3,5 @@ from marshmallow import Schema
 
 
 class BaseSchema(Schema):
-    def jsonify(self, obj):
-        return jsonify(self.dump(obj))
+    def jsonify(self, obj, many=False):
+        return jsonify(self.dump(obj, many=many))
