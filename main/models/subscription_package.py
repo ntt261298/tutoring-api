@@ -1,7 +1,8 @@
 from main import db
+from .base import TimestampMixin
 
 
-class SubscriptionPackageModel(db.Model):
+class SubscriptionPackageModel(db.Model, TimestampMixin):
     __tablename__ = 'subscription_package'
 
     id = db.Column(db.Integer, primary_key=True)

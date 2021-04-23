@@ -1,7 +1,8 @@
 from main import db
+from .base import TimestampMixin
 
 
-class ExpertTopicModel(db.Model):
+class ExpertTopicModel(db.Model, TimestampMixin):
     __tablename__ = 'expert_topic'
 
     expert_id = db.Column(db.Integer, db.ForeignKey('expert.id'), primary_key=True, autoincrement=False)

@@ -1,8 +1,9 @@
 from main import db
+from .base import TimestampMixin
 from main.libs.jwttoken import generate_access_token_nonce
 
 
-class ExpertModel(db.Model):
+class ExpertModel(db.Model, TimestampMixin):
     __tablename__ = 'expert'
     account_type = 'expert'
 
@@ -11,12 +12,11 @@ class ExpertModel(db.Model):
     password_hash = db.Column(db.String(64), nullable=True)
     password_salt = db.Column(db.String(64), nullable=True)
     access_token_nonce = db.Column(db.String(8), nullable=False, default=generate_access_token_nonce)
-    first_name = db.Column(db.String(32), nullable=True)
-    last_name = db.Column(db.String(32), nullable=True)
+    nickname = db.Column(db.String(128), nullable=True)
     email_verified = db.Column(db.Boolean(create_constraint=False), nullable=False, default=False)
     browser_fingerprint = db.Column(db.String(255))
-    google_id = db.Column(db.String(64))
     is_fraud = db.Column(db.Boolean(create_constraint=False), nullable=False, default=False)
+    status = db.Column(db.String(64), nullable=False, default="active")
 
     expert_topics = db.relationship('ExpertTopicModel')
     expert_ranks = db.relationship('ExpertRankModel')

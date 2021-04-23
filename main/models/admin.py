@@ -1,8 +1,9 @@
 from main import db
+from .base import TimestampMixin
 from main.libs.jwttoken import generate_access_token_nonce
 
 
-class AdminModel(db.Model):
+class AdminModel(db.Model, TimestampMixin):
     __tablename__ = 'admin'
     account_type = 'admin'
 

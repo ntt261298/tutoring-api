@@ -1,7 +1,8 @@
 from main import db
+from .base import TimestampMixin
 
 
-class ExpertEarningModel(db.Model):
+class ExpertEarningModel(db.Model, TimestampMixin):
     __tablename__ = 'expert_earning'
 
     id = db.Column(db.Integer, primary_key=True)

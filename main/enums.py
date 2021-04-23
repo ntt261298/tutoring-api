@@ -18,3 +18,10 @@ class SubscriptionStatus:
 class Topic:
     MATH = 1
     ENGLISH = 2
+    ALL = 3
+
+
+class AccountStatus:
+    ACTIVE = 'active'
+    DELETED = 'deleted'
+

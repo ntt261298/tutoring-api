@@ -1,7 +1,8 @@
 from main import db
+from .base import TimestampMixin
 
 
-class TransactionModel(db.Model):
+class TransactionModel(db.Model, TimestampMixin):
     __tablename__ = 'transaction'
 
     id = db.Column(db.Integer, primary_key=True)

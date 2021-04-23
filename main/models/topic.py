@@ -1,7 +1,8 @@
 from main import db
+from .base import TimestampMixin
 
 
-class TopicModel(db.Model):
+class TopicModel(db.Model, TimestampMixin):
     __tablename__ = 'topic'
 
     id = db.Column(db.Integer, primary_key=True)

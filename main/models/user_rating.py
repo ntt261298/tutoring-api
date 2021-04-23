@@ -1,7 +1,8 @@
 from main import db
+from .base import TimestampMixin
 
 
-class UserRatingModel(db.Model):
+class UserRatingModel(db.Model, TimestampMixin):
     __tablename__ = 'user_rating'
 
     question_id = db.Column(db.Integer, db.ForeignKey('question.id'), primary_key=True, autoincrement=False)

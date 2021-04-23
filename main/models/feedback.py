@@ -1,7 +1,8 @@
 from main import db
+from .base import TimestampMixin
 
 
-class FeedbackModel(db.Model):
+class FeedbackModel(db.Model, TimestampMixin):
     __tablename__ = 'feedback'
 
     id = db.Column(db.Integer, primary_key=True)
