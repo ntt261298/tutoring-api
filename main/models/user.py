@@ -19,6 +19,7 @@ class UserModel(db.Model, TimestampMixin):
     browser_fingerprint = db.Column(db.String(255))
     google_id = db.Column(db.String(64))
     payment_methods = db.Column(db.Text)
+    status = db.Column(db.String(64), nullable=False, default="active")
 
     def __init__(self, *args, **kwargs):
         super(UserModel, self).__init__(*args, **kwargs)
