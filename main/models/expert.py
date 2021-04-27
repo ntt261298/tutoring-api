@@ -17,6 +17,7 @@ class ExpertModel(db.Model, TimestampMixin):
     browser_fingerprint = db.Column(db.String(255))
     is_fraud = db.Column(db.Boolean(create_constraint=False), nullable=False, default=False)
     status = db.Column(db.String(64), nullable=False, default="active")
+    payment_method = db.Column(db.String(255))
 
     expert_topics = db.relationship('ExpertTopicModel')
     expert_ranks = db.relationship('ExpertRankModel')
