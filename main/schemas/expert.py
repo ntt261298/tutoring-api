@@ -8,3 +8,4 @@ class ExpertSchema(BaseSchema):
     email = fields.Email()
     nickname = fields.String()
     payment_method = fields.String()
+    account_type = fields.String()

@@ -21,6 +21,7 @@ class ExpertModel(db.Model, TimestampMixin):
 
     expert_topics = db.relationship('ExpertTopicModel')
     expert_ranks = db.relationship('ExpertRankModel')
+    expert_state = db.relationship('ExpertStateModel', back_populates='expert', uselist=False)
 
     def __init__(self, *args, **kwargs):
         super(ExpertModel, self).__init__(*args, **kwargs)

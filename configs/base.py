@@ -14,3 +14,10 @@ class _BaseConfig(object):
     BRAINTREE_PRIVATE_KEY = 'dd4adafb49d2d0d61e7d7dbf206a82b0'
     BRAINTREE_PUBLIC_KEY = 'z379x5hhv2z7c596'
     BRAINTREE_EMAIL_SUPPORT = 'ntt261298@gmail.com'
+
+    FIXED_BID_AMOUNT = 8
+
+    PUSHER_CHANNEL_NAMESPACE = 'tutoring'
+    PUSHER_APP_ID = '1197322'
+    PUSHER_KEY = '5bbce7630a816f302c2f'
+    PUSHER_SECRET = '63874fa2780dd2b7b872'

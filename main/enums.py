@@ -25,3 +25,29 @@ class AccountStatus:
     ACTIVE = 'active'
     DELETED = 'deleted'
 
+
+class ExpertState:
+    NOT_ROUTED = 'Not routed'
+    BIDDING = 'Bidding'
+    KING = 'King'
+    WORKING = 'Working'
+    RATING = 'Rating'
+
+
+class RREConfig:
+    ROUTING_TIMEOUT = 60
+    CHATTING_TIMEOUT = 120
+
+
+class QuestionState:
+    NOT_ROUTED = 'Not routed'
+    NO_KING = 'No king'
+    HAS_KING = 'Has king'
+    WORKING = 'Working'
+    COMPLETE = 'Complete'
+    FAILED = 'Failed'
+    RATING = 'Rating'
+
+
+class PusherEvent:
+    STATE_CHANGE = 'state_change'

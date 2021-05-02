@@ -16,6 +16,7 @@ def get_expert_info(expert):
         "email": expert.email,
         "nickname": expert.nickname,
         "payment_method": expert.payment_method,
+        "account_type": expert.account_type,
     }
 
     return ExpertSchema().jsonify(data)
