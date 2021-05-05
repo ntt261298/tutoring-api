@@ -35,6 +35,7 @@ class ErrorCode:
     USER_EMAIL_ALREADY_EXISTED = 40032
     USER_ERROR = 40033
     BRAINTREE_ERROR = 40034
+    QUESTION_ALREADY_EXISTS = 40035
     UNAUTHORIZED = 40100
 
 
@@ -83,6 +84,12 @@ class BraintreeError(Error):
     status_code = StatusCode.BAD_REQUEST
     error_code = ErrorCode.BRAINTREE_ERROR
     error_message = 'We were unable to complete this transaction, please contact your bank for more details.'
+
+
+class QuestionAlreadyExists(Error):
+    status_code = StatusCode.BAD_REQUEST
+    error_code = ErrorCode.QUESTION_ALREADY_EXISTS
+    error_message = 'You already have a question'
 
 
 class UserError(Error):

@@ -5,8 +5,9 @@ from sqlalchemy.orm import contains_eager
 
 from main.enums import ExpertState, RREConfig, QuestionState
 from main.models.expert import ExpertModel
-from main.models.expert_state import ExpertStateModel
+from main.models.user import UserModel
 from main.models.question import QuestionModel
+from main.models.expert_state import ExpertStateModel
 
 
 def _get_remain_claim_time(expert, current_question):
@@ -62,3 +63,37 @@ def generate_expert_state(expert_id):
     }
 
     return data
+
+
+def generate_user_state(user_id):
+    user = UserModel.query. \
+        join(UserModel.current_question). \
+        join(QuestionModel.question_state). \
+        filter(UserModel.id == user_id). \
+        options(
+            contains_eager(UserModel.current_question)). \
+        options(
+            contains_eager(UserModel.current_question).
+            contains_eager(QuestionModel.question_state)). \
+        one_or_none()
+
+    current_question = user.current_question if user else None
+
+    pre_state = None
+
+    if current_question:
+        state = current_question.question_state.state
+        if state in QuestionState.get_finished_states():
+            # If state is one of the final states, store the final state before reset the state to null
+            pre_state = state
+            current_question = None
+
+    return {
+        'user_id': user_id,
+        'state': current_question.question_state.state if current_question else None,
+        'pre_state': pre_state,
+        'question': current_question,
+        'timestamp': time.time() * 1000,
+        'chatting_timeout': RREConfig.CHATTING_TIMEOUT if current_question else 0,
+        'remain_chatting_time': _get_remain_chatting_time(current_question),
+    }

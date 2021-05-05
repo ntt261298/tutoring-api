@@ -18,17 +18,11 @@ class _StateQuestionSchema(Schema):
 
 
 class ExpertStateSchema(BaseSchema):
-    class _StateParticipantSchema(Schema):
-        name = fields.String()
-        user_id = fields.Integer()
-        expert_id = fields.Integer()
-
     expert_id = fields.Integer()
     state = fields.String()
     pre_state = fields.String()
     connected = fields.Boolean()
     question_info = fields.Nested(_StateQuestionSchema)
-    participants = fields.Nested(_StateParticipantSchema, many=True)
     timestamp = fields.Integer()
     updated = fields.Integer()
     routing_timeout = fields.Integer()
@@ -36,3 +30,13 @@ class ExpertStateSchema(BaseSchema):
     remain_claim_time = fields.Integer()
     remain_chatting_time = fields.Integer()
     fixed_bid_amount = fields.Float(default=config.FIXED_BID_AMOUNT)
+
+
+class UserStateSchema(BaseSchema):
+    user_id = fields.Integer()
+    state = fields.String()
+    pre_state = fields.String()
+    question = fields.Nested(_StateQuestionSchema)
+    timestamp = fields.Integer()
+    chatting_timeout = fields.Integer()
+    remain_chatting_time = fields.Integer()

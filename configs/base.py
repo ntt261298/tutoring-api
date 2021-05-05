@@ -21,3 +21,9 @@ class _BaseConfig(object):
     PUSHER_APP_ID = '1197322'
     PUSHER_KEY = '5bbce7630a816f302c2f'
     PUSHER_SECRET = '63874fa2780dd2b7b872'
+    PUSHER_CLUSTER = 'ap1'
+
+    REQUEST_DEADLINE = 60
+
+    CELERY_BROKER_URL = 'redis://localhost:6379',
+    CELERY_RESULT_BACKEND = 'redis://localhost:6379'

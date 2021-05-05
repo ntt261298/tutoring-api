@@ -1,10 +1,11 @@
 from main import db
 from main.enums import ExpertState
-from .base import TimestampMixin
+from .base import TimestampMixin, TrackChangesMixin
 
 
-class ExpertStateModel(db.Model, TimestampMixin):
+class ExpertStateModel(db.Model, TimestampMixin, TrackChangesMixin):
     __tablename__ = 'expert_state'
+    __track_changes__ = ['state', 'connected']
 
     expert_id = db.Column(db.Integer, db.ForeignKey('expert.id'), primary_key=True, autoincrement=False)
     state = db.Column(db.String(15), nullable=False, default=ExpertState.NOT_ROUTED)

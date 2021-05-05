@@ -21,6 +21,12 @@ class UserModel(db.Model, TimestampMixin):
     payment_methods = db.Column(db.Text)
     status = db.Column(db.String(64), nullable=False, default="active")
 
+    current_question = db.relationship(
+        'QuestionModel',
+        foreign_keys=[current_question_id],
+        post_update=True
+    )
+
     def __init__(self, *args, **kwargs):
         super(UserModel, self).__init__(*args, **kwargs)
 

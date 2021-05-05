@@ -6,7 +6,9 @@ class UserRatingModel(db.Model, TimestampMixin):
     __tablename__ = 'user_rating'
 
     question_id = db.Column(db.Integer, db.ForeignKey('question.id'), primary_key=True, autoincrement=False)
+    expert_id = db.Column(db.Integer, db.ForeignKey('expert.id'))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    topic_id = db.Column(db.Integer, db.ForeignKey('topic.id'))
     score = db.Column(db.Integer, nullable=False)
     comment = db.Column(db.Text)
 

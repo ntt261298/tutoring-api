@@ -86,3 +86,7 @@ def _trigger_pusher(channel_name, event_type, data):
 
 def trigger_state_change(account_type, account_id, state):
     _trigger_pusher(_get_account_channel_name(account_type, account_id), PusherEvent.STATE_CHANGE, state)
+
+
+def trigger_question_done(question_id, data):
+    _trigger_pusher(_get_question_channel_name(question_id), PusherEvent.QUESTION_DONE, data)
