@@ -41,7 +41,6 @@ def create_question(user, args):
     attached_file = request.files.get('file')
 
     new_file = None
-    print('attached_file', attached_file)
     # Create file from user's uploaded file. It is an image (.jpeg, .jpg, .png)
     if attached_file:
         file_data = attached_file.read()
@@ -50,14 +49,14 @@ def create_question(user, args):
         new_file = FileModel(name=attached_file.filename, rendered_data=rendered_data)
         new_file.save_to_db()
 
-    print('new_file', new_file)
-
     # Create question
     question = QuestionModel(
         user=user,
         topic_id=topic_id,
         text=args.get('content'),
     )
+    if new_file:
+        question.file_id = new_file.id
     question.save_to_db()
 
     # Update reference_id in FileModel objects
@@ -85,6 +84,7 @@ def get_user_question(user, question_id):
         join(QuestionModel.topic). \
         one_or_none()
 
+    print('question', question)
     if question is None:
         raise errors.BadRequest()
 

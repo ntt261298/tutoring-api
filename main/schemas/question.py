@@ -20,13 +20,19 @@ class TopicSchema(Schema):
     name = fields.String()
 
 
+class FileSchema(Schema):
+    id = fields.Int()
+    name = fields.String()
+    rendered_data = fields.String()
+
+
 class QuestionSchema(BaseSchema):
     id = fields.Int()
     user_id = fields.Int()
     expert_id = fields.Int()
     created = fields.DateTime()
 
-    file_data = fields.Raw()
+    file = fields.Nested(FileSchema)
 
     text = fields.Str()
     topic = fields.Nested(TopicSchema)

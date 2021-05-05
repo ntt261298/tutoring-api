@@ -4,6 +4,12 @@ from config import config
 from main.schemas.base import BaseSchema
 
 
+class _FileSchema(Schema):
+    id = fields.Integer()
+    rendered_data = fields.String()
+    name = fields.String()
+
+
 class _StateQuestionSchema(Schema):
     id = fields.Integer()
     text = fields.String()
@@ -11,10 +17,7 @@ class _StateQuestionSchema(Schema):
     user_id = fields.Integer()
     topic_id = fields.Integer()
     topic_name = fields.String()
-
-    # For info message at beginning of chat session
-    original_file_type = fields.String()
-    original_file_url = fields.String()
+    file = fields.Nested(_FileSchema)
 
 
 class ExpertStateSchema(BaseSchema):
