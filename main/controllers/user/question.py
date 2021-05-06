@@ -1,16 +1,18 @@
 import base64
+import json
 
-from flask import request
+from flask import request, jsonify
 
 from main import app, auth, errors, db
 from main.enums import QuestionState, ReferenceFileType
 from main.libs.validate_forms import validate_forms
-from main.schemas.question import CreateQuestionSchema, QuestionSchema, QuestionWithState
+from main.schemas.question import CreateQuestionSchema, QuestionSchema, QuestionWithState, QuestionMessageSchema
 from main.models.question import QuestionModel
-from main.models.expert import ExpertModel
 from main.models.question_state import QuestionStateModel
 from main.models.topic import TopicModel
 from main.models.file import FileModel
+from main.models.question_message import QuestionMessageModel
+from main.engines import pusher
 
 
 def _check_user_has_active_question(user):
@@ -89,3 +91,48 @@ def get_user_question(user, question_id):
         raise errors.BadRequest()
 
     return QuestionWithState().jsonify(question, many=False)
+
+
+@app.route('/user/me/question_messages', methods=['POST'])
+@auth.requires_token_auth('user')
+@validate_forms(QuestionMessageSchema())
+def create_user_question_message(user, args):
+    question = QuestionModel.query. \
+        filter_by(id=args['question_id']). \
+        one_or_none()
+
+    if not question:
+        raise errors.BadRequest()
+
+    if question.question_state.state not in [QuestionState.WORKING]:
+        raise errors.BadRequest()
+
+    message = args['message']
+    attached_file = request.files.get('file')
+    # If the message doesn't contain either a file or some content, an error should be returned
+    if attached_file is None and message is None:
+        raise errors.BadRequest(message='Invalid input')
+
+    question_message = QuestionMessageModel(
+        question_id=question.id,
+        user_id=user.id,
+        message=message,
+    )
+
+    if attached_file:
+        file_data = attached_file.read()
+        rendered_data = base64.b64encode(file_data).decode('ascii')
+
+        new_file = FileModel(name=attached_file.filename, rendered_data=rendered_data)
+        new_file.save_to_db()
+        question_message.file_id = new_file.id
+
+    db.session.add(question_message)
+    db.session.commit()
+
+    response = QuestionMessageSchema().jsonify(question_message)
+    response_dict = json.loads(response.get_data())
+
+    pusher.trigger_message(args['question_id'], response_dict)
+
+    return jsonify(response_dict)

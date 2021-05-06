@@ -42,6 +42,7 @@ class RREConfig:
 class PusherEvent:
     STATE_CHANGE = 'state_change'
     QUESTION_DONE = 'question_done'
+    NEW_MESSAGE = 'new_message'
 
 
 class ReferenceFileType:

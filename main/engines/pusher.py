@@ -90,3 +90,7 @@ def trigger_state_change(account_type, account_id, state):
 
 def trigger_question_done(question_id, data):
     _trigger_pusher(_get_question_channel_name(question_id), PusherEvent.QUESTION_DONE, data)
+
+
+def trigger_message(question_id, message):
+    _trigger_pusher(_get_question_channel_name(question_id), PusherEvent.NEW_MESSAGE, message)

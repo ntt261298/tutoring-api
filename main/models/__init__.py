@@ -8,6 +8,7 @@ __all__ = [
     'feedback',
     'file',
     'question',
+    'question_message',
     'question_state',
     'route',
     'subscription_package',

@@ -26,6 +26,36 @@ class FileSchema(Schema):
     rendered_data = fields.String()
 
 
+class QuestionMessageSchema(BaseSchema):
+    class AttachmentSchema(BaseSchema):
+        id = fields.Integer(required=True)
+        nonce = fields.String(required=True)
+
+    id = fields.Integer()
+    user_id = fields.Integer()
+    expert_id = fields.Integer()
+    message = fields.String(required=False, missing=None)
+    created = fields.DateTime()
+    question_id = fields.Integer(required=True)
+
+    # For file message
+    file = fields.Nested(AttachmentSchema, allow_none=True)
+
+
+class QuestionState(Schema):
+    state = fields.String()
+
+
+class ResponseMessageSchema(BaseSchema):
+    id = fields.Integer()
+    user_id = fields.Integer()
+    expert_id = fields.Integer()
+    message = fields.String(required=False, missing=None)
+    created = fields.DateTime()
+    question_id = fields.Integer(required=True)
+    file = fields.Nested(FileSchema)
+
+
 class QuestionSchema(BaseSchema):
     id = fields.Int()
     user_id = fields.Int()
@@ -36,10 +66,7 @@ class QuestionSchema(BaseSchema):
 
     text = fields.Str()
     topic = fields.Nested(TopicSchema)
-
-
-class QuestionState(Schema):
-    state = fields.String()
+    messages = fields.Nested(ResponseMessageSchema, many=True)
 
 
 class QuestionWithState(QuestionSchema):
