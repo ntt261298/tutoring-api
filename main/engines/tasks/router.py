@@ -3,11 +3,14 @@ from datetime import datetime, timedelta
 from celery.utils.log import get_task_logger
 
 from main import celery, db
-from main.enums import ExpertState, SentinelRouteState, RouteState, EndSessionReason, RREConfig, QuestionState
+from main.enums import ExpertState, SentinelRouteState, RouteState, RREConfig, QuestionState
 from main.models.question_state import QuestionStateModel
 from main.models.expert_state import ExpertStateModel
 from main.models.question import QuestionModel
+from main.models.expert_earning import ExpertEarningModel
+from main.models.user_subscription_package import UserSubscriptionPackageModel
 from main.models.route import RouteModel
+from main.models.user import UserModel
 from main.engines import rre, pusher
 from main.libs import float_operator
 
@@ -165,6 +168,25 @@ def _change_route_state(question_state, next_state):
     question_state.state = compute_question_state(question_routes)
     current_route.expert_state.state = compute_expert_state(current_route)
 
+    expert_earning = ExpertEarningModel(
+        expert_id=current_route.expert_id,
+        question_id=current_route.question_id,
+        amount=current_route.bid_amount,
+    )
+    user = UserModel.query.get(question_state.user_id)
+    user_subscription_package = UserSubscriptionPackageModel.query.filter_by(
+        user_id=question_state.user_id,
+        status="active"
+    ).first()
+
+    if user_subscription_package is None:
+        if user.free_credit_balance > 0:
+            user.free_credit_balance = user.free_credit_balance - 1
+        elif user.paid_credit_balance > 0:
+            user.paid_credit_balance = user.paid_credit_balance - 1
+
+    db.session.add(user)
+    db.session.add(expert_earning)
     db.session.commit()
 
     # Notify client that question is done
@@ -207,7 +229,7 @@ def handle_chatting_timeout(question_id):
         raise Exception('Question is not in working state')
 
     # Change state from answering to rating
-    _change_route_state(question_state, RouteState.RATING, EndSessionReason.CHATTING_TIMEOUT)
+    _change_route_state(question_state, RouteState.RATING)
 
 
 @celery.task()

@@ -49,8 +49,6 @@ def generate_expert_state(expert_id):
     if expert.expert_state.state != ExpertState.NOT_ROUTED:
         current_question = expert.expert_state.current_question
 
-    print('current_question', current_question.messages)
-
     data = {
         'expert_id': expert.id,
         'state': expert.expert_state.state,

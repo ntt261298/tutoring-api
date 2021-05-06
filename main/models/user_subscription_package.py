@@ -12,7 +12,7 @@ class UserSubscriptionPackageModel(db.Model, TimestampMixin):
     amount = db.Column(db.Float)
     expired_in = db.Column(db.DateTime)
     number_of_questions = db.Column(db.Integer)
-    status = db.Column(db.String(128))
+    status = db.Column(db.String(128), nullable=False, default="active")
 
     def __init__(self, *args, **kwargs):
         super(UserSubscriptionPackageModel, self).__init__(*args, **kwargs)

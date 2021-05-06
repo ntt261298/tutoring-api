@@ -39,7 +39,7 @@ class PaymentFlow:
         transaction = TransactionModel(
             user_id=self.user_id,
             package_name=self.package_name,
-            package_type=self.package_type,
+            number_of_questions=self.number_of_questions,
             amount=self.package_price,
         )
 
