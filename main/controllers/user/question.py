@@ -2,9 +2,12 @@ import base64
 import json
 
 from flask import request, jsonify
+from marshmallow import fields
+from sqlalchemy import desc
 
 from main import app, auth, errors, db
-from main.enums import QuestionState, ReferenceFileType
+from main.enums import QuestionState, ReferenceFileType, Topic
+from main.libs.validate_args import validate_args
 from main.libs.validate_forms import validate_forms
 from main.schemas.question import CreateQuestionSchema, QuestionSchema, QuestionWithState, QuestionMessageSchema
 from main.models.question import QuestionModel
@@ -12,6 +15,7 @@ from main.models.question_state import QuestionStateModel
 from main.models.topic import TopicModel
 from main.models.file import FileModel
 from main.models.question_message import QuestionMessageModel
+from main.schemas.admin import PageSchema
 from main.engines import pusher
 
 
@@ -86,11 +90,48 @@ def get_user_question(user, question_id):
         join(QuestionModel.topic). \
         one_or_none()
 
-    print('question', question)
     if question is None:
         raise errors.BadRequest()
 
     return QuestionWithState().jsonify(question, many=False)
+
+
+class SearchQuestionSchema(PageSchema):
+    items_per_page = fields.Integer(required=True)
+    text = fields.String()
+    topic_id = fields.Integer(required=True)
+
+
+@app.route('/user/me/questions', methods=['GET'])
+@auth.requires_token_auth('user')
+@validate_args(SearchQuestionSchema())
+def get_user_questions(user, args):
+    filters = []
+
+    query = QuestionModel.query. \
+        filter(QuestionModel.user_id == user.id). \
+        join(QuestionModel.question_state). \
+        filter(QuestionStateModel.state == QuestionState.COMPLETE).\
+        join(QuestionModel.topic). \
+        join(QuestionModel.user_rating)
+
+    if args['text']:
+        filters.append(QuestionModel.text.like('%' + args['text'] + '%'))
+    if args['topic_id'] != Topic.ALL:
+        filters.append(QuestionModel.topic_id == args['topic_id'])
+
+    query = query.order_by(desc(QuestionModel.id))
+
+    if filters:
+        query = query.filter(*filters)
+
+    paging = query.paginate(args['page'], args['items_per_page'], False)
+    questions = QuestionWithState(many=True).dump(paging.items)
+    return jsonify({
+        'questions': questions,
+        'total_items': paging.total,
+        'items_per_page': paging.per_page
+    })
 
 
 @app.route('/user/me/question_messages', methods=['POST'])

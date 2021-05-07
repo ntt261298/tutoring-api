@@ -20,6 +20,11 @@ class TopicSchema(Schema):
     name = fields.String()
 
 
+class UserRatingSchema(Schema):
+    id = fields.Int()
+    score = fields.String()
+
+
 class FileSchema(Schema):
     id = fields.Int()
     name = fields.String()
@@ -66,6 +71,7 @@ class QuestionSchema(BaseSchema):
 
     text = fields.Str()
     topic = fields.Nested(TopicSchema)
+    user_rating = fields.Nested(UserRatingSchema)
     messages = fields.Nested(ResponseMessageSchema, many=True)
 
 

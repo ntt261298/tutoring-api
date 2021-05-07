@@ -18,6 +18,7 @@ class QuestionModel(db.Model, TimestampMixin):
     user = db.relationship('UserModel', foreign_keys=[user_id])
     topic = db.relationship('TopicModel', foreign_keys=[topic_id])
     file = db.relationship('FileModel', foreign_keys=[file_id])
+    user_rating = db.relationship('UserRatingModel', back_populates='question', uselist=False)
     question_state = db.relationship('QuestionStateModel', back_populates='question', uselist=False)
 
     def __init__(self, *args, **kwargs):

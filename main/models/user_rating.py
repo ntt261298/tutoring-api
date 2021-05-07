@@ -11,6 +11,7 @@ class UserRatingModel(db.Model, TimestampMixin):
     topic_id = db.Column(db.Integer, db.ForeignKey('topic.id'))
     score = db.Column(db.Integer, nullable=False)
     comment = db.Column(db.Text)
+    question = db.relationship('QuestionModel', back_populates='user_rating', foreign_keys=[question_id])
 
     def __init__(self, *args, **kwargs):
         super(UserRatingModel, self).__init__(*args, **kwargs)
