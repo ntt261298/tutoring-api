@@ -11,6 +11,9 @@ class ExpertEarningModel(db.Model, TimestampMixin):
     amount = db.Column(db.Float, nullable=False, default=0.0)
     status = db.Column(db.String(64), nullable=False, default='unpaid')
 
+    question = db.relationship('QuestionModel', foreign_keys=[question_id])
+    expert = db.relationship('ExpertModel', back_populates='expert_earnings', foreign_keys=[expert_id])
+
     def __init__(self, *args, **kwargs):
         super(ExpertEarningModel, self).__init__(*args, **kwargs)
 

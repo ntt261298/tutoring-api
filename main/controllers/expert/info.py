@@ -11,15 +11,7 @@ from main.libs import pw
 @app.route('/expert/me/info', methods=['GET'])
 @auth.requires_token_auth('expert')
 def get_expert_info(expert):
-    data = {
-        "id": expert.id,
-        "email": expert.email,
-        "nickname": expert.nickname,
-        "payment_method": expert.payment_method,
-        "account_type": expert.account_type,
-    }
-
-    return ExpertSchema().jsonify(data)
+    return ExpertSchema().jsonify(expert)
 
 
 class UpdateInfoSchema(BaseSchema):
