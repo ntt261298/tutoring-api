@@ -65,7 +65,7 @@ class QuestionSchema(BaseSchema):
     id = fields.Int()
     user_id = fields.Int()
     expert_id = fields.Int()
-    created = fields.DateTime()
+    created = fields.String()
 
     file = fields.Nested(FileSchema)
 

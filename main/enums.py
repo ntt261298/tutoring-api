@@ -76,6 +76,16 @@ class QuestionState:
     RATING = 'Rating'
 
     @staticmethod
+    def get_active_states():
+        return [
+            QuestionState.RATING,
+            QuestionState.NOT_ROUTED,
+            QuestionState.NO_KING,
+            QuestionState.HAS_KING,
+            QuestionState.WORKING
+        ]
+
+    @staticmethod
     def get_finished_states():
         return [QuestionState.COMPLETE, QuestionState.FAILED]
 

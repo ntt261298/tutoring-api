@@ -22,7 +22,7 @@ class UpdateSubscriptionPackageSchema(BaseSchema):
     number_of_questions = fields.Integer(required=False)
 
 
-@app.route('/admin/subscription_packages', methods=['GET'])
+@app.route('/admin/subscription-packages', methods=['GET'])
 @auth.requires_token_auth('admin')
 def get_admin_subscription_packages(admin):
     subscription_packages = SubscriptionPackageModel.query.all()
@@ -33,7 +33,7 @@ def get_admin_subscription_packages(admin):
     })
 
 
-@app.route('/admin/subscription_packages/<int:subscription_package_id>', methods=['PUT'])
+@app.route('/admin/subscription-packages/<int:subscription_package_id>', methods=['PUT'])
 @validate_args(UpdateSubscriptionPackageSchema())
 @auth.requires_token_auth('admin')
 def update_admin_subscription_packages(admin, subscription_package_id, args):

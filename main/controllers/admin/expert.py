@@ -5,6 +5,7 @@ from main import app, auth, errors, db
 from main.libs.validate_args import validate_args
 from main.libs import pw
 from main.models.expert import ExpertModel
+from main.models.expert_state import ExpertStateModel
 from main.models.expert_topic import ExpertTopicModel
 from main.models.expert_rank import ExpertRankModel
 from main.schemas.base import BaseSchema
@@ -69,6 +70,22 @@ def get_admin_experts(admin, args):
         'experts': experts,
         'total_items': paging.total,
         'items_per_page': paging.per_page
+    })
+
+
+@app.route('/admin/active-experts', methods=['GET'])
+@auth.requires_token_auth('admin')
+def get_active_experts(admin):
+    expert_states = ExpertStateModel.query.all()
+
+    active_experts = 0
+    for expert_state in expert_states:
+        if expert_state.connected is True:
+            print('expert_state.connected', expert_state.connected)
+            active_experts += 1
+
+    return jsonify({
+        'active_experts': active_experts,
     })
 
 
