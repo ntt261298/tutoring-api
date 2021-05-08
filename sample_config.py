@@ -42,7 +42,7 @@ def create_subscription_package(db):
 
     db.session.add(
         SubscriptionPackageModel(
-            name='Monthly Subscription',
+            name='Yearly Subscription',
             type='yearly',
             price=960,
             number_of_questions=0
