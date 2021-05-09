@@ -15,8 +15,6 @@ class QuestionStateModel(db.Model, TimestampMixin, TrackChangesMixin):
     num_bidding = db.Column(db.Integer, nullable=False, default=0)
     routing_expiration = db.Column(db.DateTime, nullable=True)
     chatting_expiration = db.Column(db.DateTime, nullable=True)
-    # failed reason
-    failed_reason = db.Column(db.String(100), nullable=True)
 
     user = db.relationship('UserModel', foreign_keys=[user_id])
     question = db.relationship('QuestionModel', back_populates='question_state', foreign_keys=[question_id])

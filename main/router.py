@@ -11,7 +11,7 @@ def on_question_state_commit(question_state):
             ('num_bidding' not in what_changed):
         return
     if state == QuestionState.NOT_ROUTED:
-        handle_question_created.s(question_id).apply_async(countdown=3)
+        handle_question_created.delay(question_id)
     elif (state in (QuestionState.NO_KING, QuestionState.HAS_KING)) and \
             (question_state.num_bidding == 0):
         handle_route_timeout.delay(question_id)

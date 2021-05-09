@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 
 from celery.utils.log import get_task_logger
+from sqlalchemy.orm.exc import NoResultFound
 
 from main import celery, db
 from main.enums import ExpertState, SentinelRouteState, RouteState, RREConfig, QuestionState
@@ -303,7 +304,7 @@ def handle_route_timeout(question_id, timeout=False):
     # handle_chatting_timeout.s(question_id).apply_async(countdown=chatting_timeout)
 
 
-@celery.task()
+@celery.task
 def handle_question_created(question_id):
     question_state = QuestionStateModel.query.get(question_id)
     assert question_state
