@@ -114,3 +114,8 @@ class EndSessionReason:
 class RatingScore:
     MAXIMUM_SCORE = 5
     MINIMUM_SCORE = 1
+
+
+class EarningStatus:
+    PAID = 'paid'
+    UNPAID = 'unpaid'

@@ -4,7 +4,6 @@ from flask import jsonify
 
 from config import config
 from main import app
-from main import db
 from main.errors import PermissionDenied
 from main.models.admin import AdminModel
 from main.schemas.base import BaseSchema

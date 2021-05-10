@@ -1,7 +1,6 @@
 from datetime import datetime, timedelta
 
 from celery.utils.log import get_task_logger
-from sqlalchemy.orm.exc import NoResultFound
 
 from main import celery, db
 from main.enums import ExpertState, SentinelRouteState, RouteState, RREConfig, QuestionState

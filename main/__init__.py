@@ -83,3 +83,9 @@ def _after_flush_handler(session, flush_ctx):
 
 listen(SignallingSession, 'after_commit', _after_commit_handler)
 listen(SignallingSession, 'after_flush', _after_flush_handler)
+
+from main.engines.tasks.daily import terminate_subscription, pay_for_experts, \
+    TERMINATE_SUBSCRIPTION_PERIOD, PAY_FOR_EXPERTS_PERIOD
+
+terminate_subscription.s().apply_async(countdown=TERMINATE_SUBSCRIPTION_PERIOD)
+pay_for_experts.s().apply_async(countdown=PAY_FOR_EXPERTS_PERIOD)
