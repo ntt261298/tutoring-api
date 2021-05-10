@@ -13,6 +13,7 @@ from main.libs import pw
 def get_user_info(user):
     data = {
         "id": user.id,
+        "google_id": user.google_id,
         "email": user.email,
         "nickname": user.nickname,
         "free_credit_balance": user.free_credit_balance,

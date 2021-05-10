@@ -27,7 +27,7 @@ def log_in_admin_google(args):
             "openid",
             "https://www.googleapis.com/auth/userinfo.profile",
             "https://www.googleapis.com/auth/userinfo.email"],
-        redirect_uri=config.GOOGLE_REDIRECT_URI,
+        redirect_uri=config.GOOGLE_REDIRECT_URI_ADMIN,
     )
 
     flow.fetch_token(code=authorization_code)
@@ -50,8 +50,7 @@ def log_in_admin_google(args):
             google_name=google_name,
             email=email,
         )
-        db.session.add(admin)
-    db.session.commit()
+        admin.save_to_db()
 
     return jsonify({
         'access_token': jwttoken.encode(admin),

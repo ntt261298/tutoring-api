@@ -2,13 +2,12 @@ from marshmallow import fields, validate
 from google_auth_oauthlib.flow import Flow
 
 from config import config
-from main import app
+from main import app, db, errors
 from main.models.user import UserModel
 from main.schemas.base import BaseSchema
 from main.schemas.user import AccessTokenSchema
 from main.libs.validate_args import validate_args
 from main.libs import pw, jwttoken
-from main import errors
 
 
 class UserLoginSchema(BaseSchema):
@@ -43,6 +42,50 @@ def log_in_user_email(args):
             raise errors.EmailAndPasswordNotMatch()
     except ValueError:
         raise errors.EmailAndPasswordNotMatch()
+
+    return AccessTokenSchema().jsonify({
+        'access_token': jwttoken.encode(user),
+        'account_id': user.id,
+        'name': user.nickname,
+        'is_signup': False,
+        'email': user.email,
+    })
+
+
+@app.route('/log-in/user/google', methods=['POST'])
+@validate_args(GoogleAuthSchema())
+def log_in_user_google(args):
+    authorization_code = args['authorization_code']
+
+    flow = Flow.from_client_secrets_file(
+        'credentials/google_client_secret.json',
+        scopes=[
+            "openid",
+            "https://www.googleapis.com/auth/userinfo.profile",
+            "https://www.googleapis.com/auth/userinfo.email"],
+        redirect_uri=config.GOOGLE_REDIRECT_URI_USER,
+    )
+
+    flow.fetch_token(code=authorization_code)
+
+    session = flow.authorized_session()
+    user_info = session.get('https://www.googleapis.com/userinfo/v2/me').json()
+    google_id = user_info['id']
+    nickname = user_info['name']
+    email = user_info['email']
+
+    if email not in config.WHITELIST_EMAILS:
+        raise errors.PermissionDenied()
+
+    user = UserModel.query.filter_by(google_id=google_id).first()
+
+    if not user:
+        user = UserModel(
+            google_id=google_id,
+            nickname=nickname,
+            email=email,
+        )
+        user.save_to_db()
 
     return AccessTokenSchema().jsonify({
         'access_token': jwttoken.encode(user),
@@ -99,49 +142,4 @@ def sign_up_user_email(args):
         'nickname': user.nickname,
         'is_signup': True,
         'email': user.email
-    })
-
-
-@app.route('/connect/user/google', methods=['POST'])
-@validate_args(GoogleAuthSchema())
-def connect_user_with_google(args):
-    authorization_code = args['authorization_code']
-
-    flow = Flow.from_client_secrets_file(
-        'credentials/google_client_secret.json',
-        scopes=[
-            "openid",
-            "https://www.googleapis.com/auth/userinfo.profile",
-            "https://www.googleapis.com/auth/userinfo.email"],
-        redirect_uri=config.GOOGLE_REDIRECT_URI,
-    )
-
-    flow.fetch_token(code=authorization_code)
-
-    session = flow.authorized_session()
-    user_info = session.get('https://www.googleapis.com/userinfo/v2/me').json()
-    print('user_info', user_info)
-    google_id = user_info['id']
-    google_name = user_info['name']
-    email = user_info['email']
-
-    if email not in config.WHITELIST_EMAILS:
-        raise errors.PermissionDenied()
-
-    user = UserModel.query.filter_by(google_id=google_id).first()
-
-    if not user:
-        user = UserModel(
-            google_id=google_id,
-            nickname=google_name,
-            email=email,
-        )
-        user.save_to_db()
-
-    return AccessTokenSchema().jsonify({
-        'access_token': jwttoken.encode(user),
-        'account_id': user.id,
-        'nickname': user.nickname,
-        'is_signup': False,
-        'email': user.email,
     })

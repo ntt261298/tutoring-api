@@ -5,7 +5,9 @@ class _BaseConfig(object):
     SQLALCHEMY_DATABASE_URI = "mysql+pymysql://root:123456@localhost/thesis"
 
     WHITELIST_EMAILS = ["ntt261298@gmail.com", "truong@gotitapp.co"]
-    GOOGLE_REDIRECT_URI = "http://localhost:3000"
+    GOOGLE_REDIRECT_URI_ADMIN = "http://localhost:3000"
+    GOOGLE_REDIRECT_URI_USER = "http://localhost:9000"
+
 
     TEMPORARY_PASSWORD_LENGTH = 12
 

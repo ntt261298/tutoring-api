@@ -15,6 +15,7 @@ class AccessTokenSchema(BaseSchema):
 
 class UserSchema(BaseSchema):
     id = fields.Integer()
+    google_id = fields.String()
     email = fields.Email()
     nickname = fields.String()
     free_credit_balance = fields.Integer()
