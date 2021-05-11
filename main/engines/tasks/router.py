@@ -305,6 +305,8 @@ def handle_route_timeout(question_id, timeout=False):
 
 @celery.task
 def handle_question_created(question_id):
+    db.session.commit()  # Fix issue related to stale data from db
+
     question_state = QuestionStateModel.query.get(question_id)
     assert question_state
 

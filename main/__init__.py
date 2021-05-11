@@ -55,10 +55,16 @@ def _on_model_committed(model_instance):
 
 
 def _after_commit_handler(session):
-    print('session', session._tracked_models)
     if hasattr(session, '_tracked_models'):
         for model in session._tracked_models:
             _on_model_committed(model)
+            model.reset_tracked_changes()
+        session._tracked_models.clear()
+
+
+def _after_rollback_handler(session):
+    if hasattr(session, '_tracked_models'):
+        for (model, operation) in session._tracked_models:
             model.reset_tracked_changes()
         session._tracked_models.clear()
 
@@ -83,6 +89,8 @@ def _after_flush_handler(session, flush_ctx):
 
 listen(SignallingSession, 'after_commit', _after_commit_handler)
 listen(SignallingSession, 'after_flush', _after_flush_handler)
+listen(SignallingSession, 'after_rollback', _after_rollback_handler)
+
 
 from main.engines.tasks.daily import terminate_subscription, pay_for_experts, \
     TERMINATE_SUBSCRIPTION_PERIOD, PAY_FOR_EXPERTS_PERIOD
