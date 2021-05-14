@@ -93,4 +93,7 @@ def trigger_question_done(question_id, data):
 
 
 def trigger_message(question_id, message):
-    _trigger_pusher(_get_question_channel_name(question_id), PusherEvent.NEW_MESSAGE, message)
+    if message['message_type'] == 'file':
+        _trigger_pusher(_get_question_channel_name(question_id), PusherEvent.NEW_MESSAGE, {"message_type": "file"})
+    else:
+        _trigger_pusher(_get_question_channel_name(question_id), PusherEvent.NEW_MESSAGE, message)

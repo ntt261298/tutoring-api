@@ -174,6 +174,11 @@ def create_user_question_message(user, args):
     response = QuestionMessageSchema().jsonify(question_message)
     response_dict = json.loads(response.get_data())
 
+    if attached_file:
+        response_dict['message_type'] = 'file'
+    else:
+        response_dict['message_type'] = 'text'
+
     pusher.trigger_message(args['question_id'], response_dict)
 
     return jsonify(response_dict)
