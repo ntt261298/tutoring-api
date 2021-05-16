@@ -115,7 +115,6 @@ def create_expert_question_message(expert, args):
     db.session.add(question_message)
     db.session.commit()
 
-    print('question_message', question_message.file)
     response = ResponseMessageSchema().jsonify(question_message)
     response_dict = json.loads(response.get_data())
 

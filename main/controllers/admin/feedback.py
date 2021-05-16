@@ -22,6 +22,8 @@ class AdminFeedbackSchema(BaseSchema):
     created = fields.String(required=True)
     email = fields.String(required=True)
     content = fields.String(required=True)
+    expert_id = fields.String(allow_none=True)
+    user_id = fields.String(allow_none=True)
 
 
 @app.route('/admin/feedback', methods=['GET'])
@@ -35,6 +37,7 @@ def get_admin_feedback(admin, args):
             (user, feedback) = item
             result.append({
                 "id": feedback.id,
+                "user_id": feedback.user_id,
                 "created": feedback.created,
                 "email": user.email,
                 "content": feedback.content,
@@ -45,6 +48,7 @@ def get_admin_feedback(admin, args):
             (expert, feedback) = item
             result.append({
                 "id": feedback.id,
+                "expert_id": feedback.expert_id,
                 "created": feedback.created,
                 "email": expert.email,
                 "content": feedback.content,
