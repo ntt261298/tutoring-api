@@ -190,7 +190,7 @@ def _change_route_state(question_state, next_state):
     db.session.commit()
 
     # Notify client that question is done
-    pusher.trigger_question_done(question_id, question_state)
+    pusher.trigger_question_done(question_id)
 
 
 def _route_experts_to_question(question_state, expert_states):
