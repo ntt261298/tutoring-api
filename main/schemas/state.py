@@ -36,11 +36,16 @@ class ResponseMessageSchema(BaseSchema):
     file = fields.Nested(_FileSchema)
 
 
+class _ExpertSchema(Schema):
+    email = fields.String()
+
+
 class _StateQuestionSchema(Schema):
     id = fields.Integer()
     text = fields.String()
     created = fields.DateTime()
     user_id = fields.Integer()
+    expert = fields.Nested(_ExpertSchema)
     topic_id = fields.Integer()
     topic_name = fields.String()
     file = fields.Nested(_FileSchema)

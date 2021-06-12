@@ -5,7 +5,6 @@ from main import celery
 from main.schemas.base import BaseSchema
 from main.engines import pusher
 from main.engines.state_machine import generate_user_state, generate_expert_state
-from main.schemas.state import UserStateSchema, ExpertStateSchema
 
 logger = get_task_logger(__name__)
 
@@ -28,11 +27,10 @@ class UserPusherStateSchema(BaseSchema):
 @celery.task()
 def push_user_state(user_id):
     user_state = generate_user_state(user_id)
-    print('user_state', user_state)
     pusher.trigger_state_change(
         'user',
         user_id,
-        UserPusherStateSchema().dump(user_state)
+        UserPusherStateSchema().dump(user_state).data
     )
 
 
@@ -42,4 +40,5 @@ def push_expert_state(expert_id):
     pusher.trigger_state_change(
         'expert',
         expert_id,
-        ExpertPusherStateSchema().dump(expert_state))
+        ExpertPusherStateSchema().dump(expert_state).data
+    )

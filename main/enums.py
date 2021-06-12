@@ -35,7 +35,7 @@ class ExpertState:
 
 
 class RREConfig:
-    ROUTING_TIMEOUT = 40
+    ROUTING_TIMEOUT = 60
     CHATTING_TIMEOUT = 120
 
 

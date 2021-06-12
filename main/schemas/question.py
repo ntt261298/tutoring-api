@@ -61,10 +61,15 @@ class ResponseMessageSchema(BaseSchema):
     file = fields.Nested(FileSchema)
 
 
+class _ExpertSchema(BaseSchema):
+    email = fields.String()
+
+
 class QuestionSchema(BaseSchema):
     id = fields.Int()
     user_id = fields.Int()
     expert_id = fields.Int()
+    expert = fields.Nested(_ExpertSchema)
     created = fields.String()
 
     file = fields.Nested(FileSchema)
