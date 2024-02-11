@@ -1,4 +1,4 @@
-# Thesis tutoring API
+# Tutoring API
 
 ## Installation and Setup
 
